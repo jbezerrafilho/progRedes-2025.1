@@ -61,16 +61,14 @@ def calculate_network_details(ip, cidr):
     network_address = ''.join(
         str(int(ip_bit) & int(mask_bit)) for ip_bit, mask_bit in zip(ip_binary, mask_binary)
     )
+
     broadcast = network_address[:cidr] + '1' * (32 - cidr)
 
-    if cidr <= 30:
-        first_host = network_address[:-1] + '1'
-        last_host = broadcast[:-1] + '0'
-    else:
-        first_host = network_address
-        last_host = broadcast
+    first_host = network_address[:-1] + '1'
+    last_host = broadcast[:-1] + '0'
 
-    total_hosts = max(0, (2 ** (32 - cidr)) - 2)
+
+    total_hosts = (2 ** (32 - cidr)) - 2
 
     return {
         'network_address': binary_to_ip(network_address),
