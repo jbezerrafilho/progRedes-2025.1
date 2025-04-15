@@ -1,5 +1,4 @@
 import json
-import os
 from datetime import datetime
 
 def main():
@@ -18,8 +17,8 @@ def main():
             network_details = calculate_network_details(ip, cidr)
 
             print(f"\nPara máscara /{cidr}:")
-            for k, v in network_details.items():
-                print(f"{k.replace('_', ' ').capitalize()}: {v}")
+            for key, value in network_details.items():
+                print(f"{key.replace('_', ' ').capitalize()}: {value}")
 
             results[f"/{cidr}"] = network_details
 
@@ -83,18 +82,11 @@ def calculate_network_details(ip, cidr):
 
 def save_to_json(dados):
     # Gera nome único com timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename_base = f"resultados_rede_{timestamp}"
-    filename = f"{filename_base}.json"
-    contador = 1
-
-    # Garante que o arquivo não será sobrescrito
-    while os.path.exists(filename):
-        filename = f"{filename_base}_{contador}.json"
-        contador += 1
+    timestamp = datetime.now().strftime("%d%m%Y_%H%M%S")
+    filename = f"resultados_rede_{timestamp}.json"
 
     # Salva o dicionário em JSON
-    with open(filename, 'w', encoding='utf-8') as f:
+    with open(filename, 'w') as f:
         json.dump(dados, f, indent=4)
     print(f"\nResultados salvos no arquivo: {filename}")
     
