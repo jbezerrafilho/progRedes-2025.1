@@ -28,7 +28,6 @@ def main():
         print(f"Erro: {e}")
 
 
-
 def validate_ip(ip):
     octetos = ip.split('.')
     if len(octetos) != 4:
@@ -61,12 +60,9 @@ def calculate_network_details(ip, cidr):
         str(int(ip_bit) & int(mask_bit)) for ip_bit, mask_bit in zip(ip_binary, mask_binary)
     )
 
-    broadcast = network_address[:cidr] + '1' * (32 - cidr)
-
+    broadcast = network_address[:cidr] + ('1' * (32 - cidr))
     first_host = network_address[:-1] + '1'
     last_host = broadcast[:-1] + '0'
-
-
     total_hosts = (2 ** (32 - cidr)) - 2
 
     return {
@@ -81,14 +77,13 @@ def calculate_network_details(ip, cidr):
 
 
 def save_to_json(dados):
-    # Gera nome único com timestamp
+    
     timestamp = datetime.now().strftime("%d%m%Y_%H%M%S")
     filename = f"resultados_rede_{timestamp}.json"
 
-    # Salva o dicionário em JSON
-    with open(filename, 'w') as f:
-        json.dump(dados, f, indent=4)
+    with open(filename, 'w') as fp:
+        json.dump(dados, fp, indent=4)
     print(f"\nResultados salvos no arquivo: {filename}")
+
     
-if __name__ == "__main__":
-    main()
+main()
