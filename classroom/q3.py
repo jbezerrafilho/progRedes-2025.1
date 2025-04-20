@@ -1,23 +1,24 @@
 import random
 
+RED = '\033[31m'
+GREEN = '\033[1;32m'
+YELLOW = '\033[1;33m'
+DEFAULT = '\033[m'
+
 def main():
 
     TENTATIVAS = 6
-    RED = '\033[31m'
-    GREEN = '\033[1;32m'
-    YELLOW = '\033[1;33m'
-    DEFAULT = '\033[m'
     atual = ''
 
-    game_rules(RED, GREEN, YELLOW, DEFAULT)
+    game_rules()
     sorteada = choice_word()
-    atual, TENTATIVAS = validate_word(TENTATIVAS, RED, GREEN, YELLOW, DEFAULT, atual, sorteada)
+    atual, TENTATIVAS = validate_word(TENTATIVAS, atual, sorteada)
     if atual != sorteada and TENTATIVAS == 0:
         print('Uma pena!!')
         print(f'A palavra sorteada foi {sorteada}!')
 
 
-def validate_word(TENTATIVAS, RED, GREEN, YELLOW, DEFAULT, atual, sorteada):
+def validate_word(TENTATIVAS, atual, sorteada):
     while (atual != sorteada) and (TENTATIVAS > 0):
         try:
             palavra = input('Digite uma palavra: ').upper()
@@ -44,12 +45,12 @@ def validate_word(TENTATIVAS, RED, GREEN, YELLOW, DEFAULT, atual, sorteada):
             else:
                 atual = atual + RED + palavra[pos] + DEFAULT 
   
-        compare_words(TENTATIVAS, GREEN, DEFAULT, atual, sorteada)
+        compare_words(TENTATIVAS, atual, sorteada)
         
         TENTATIVAS -= 1
     return atual, TENTATIVAS
 
-def compare_words(TENTATIVAS, GREEN, DEFAULT, atual, sorteada):
+def compare_words(TENTATIVAS, atual, sorteada):
     if atual == sorteada and TENTATIVAS == 6:
         print(GREEN + atual + DEFAULT)
         print("Genial!!")
@@ -73,7 +74,7 @@ def compare_words(TENTATIVAS, GREEN, DEFAULT, atual, sorteada):
 
 
 
-def game_rules(RED, GREEN, YELLOW, DEFAULT):
+def game_rules():
     print(f"""
 JOGO DO TERMO
 Atenção às regras:
