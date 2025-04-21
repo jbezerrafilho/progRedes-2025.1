@@ -5,88 +5,7 @@ GREEN = '\033[1;32m'
 YELLOW = '\033[1;33m'
 DEFAULT = '\033[m'
 
-def main():
-
-    TENTATIVAS = 6
-    atual = ''
-
-    game_rules()
-    sorteada = choice_word()
-    atual, TENTATIVAS = validate_word(TENTATIVAS, atual, sorteada)
-    if atual != sorteada and TENTATIVAS == 0:
-        print('Uma pena!!')
-        print(f'A palavra sorteada foi {sorteada}!')
-
-
-def validate_word(TENTATIVAS, atual, sorteada):
-    while (atual != sorteada) and (TENTATIVAS > 0):
-        try:
-            palavra = input('Digite uma palavra: ').upper()
-        except KeyboardInterrupt:
-            print("\nEntrada interrompida pelo usuário. Encerrando o jogo.")
-            return atual, TENTATIVAS
-
-        while len(palavra) != 5 or not palavra.isalpha():
-            try:
-                palavra = input('Digite uma palavra com 5 letras: ').upper()
-            except KeyboardInterrupt:
-                print("\nEntrada interrompida pelo usuário. Encerrando o jogo.")
-                return atual, TENTATIVAS
-   
-        atual = atual + '\n'
-        for pos in range(len(sorteada)):
-            if palavra == sorteada:
-                atual = sorteada
-                break
-            elif palavra[pos] == sorteada[pos]:
-                atual = atual + GREEN + sorteada[pos] + DEFAULT         
-            elif palavra[pos] in sorteada:
-                atual = atual + YELLOW + palavra[pos] + DEFAULT
-            else:
-                atual = atual + RED + palavra[pos] + DEFAULT 
-  
-        compare_words(TENTATIVAS, atual, sorteada)
-        
-        TENTATIVAS -= 1
-    return atual, TENTATIVAS
-
-def compare_words(TENTATIVAS, atual, sorteada):
-    if atual == sorteada and TENTATIVAS == 6:
-        print(GREEN + atual + DEFAULT)
-        print("Genial!!")
-    elif atual == sorteada and TENTATIVAS == 5:
-        print(GREEN + atual + DEFAULT)
-        print("Fantástico!!")
-    elif atual == sorteada and TENTATIVAS == 4:
-        print(GREEN + atual + DEFAULT)
-        print("Extraordinário!!")
-    elif atual == sorteada and TENTATIVAS == 3:
-        print(GREEN + atual + DEFAULT)
-        print("Fenomenal!!")
-    elif atual == sorteada and TENTATIVAS == 2:
-        print(GREEN + atual + DEFAULT)
-        print("Impressionante!!")
-    elif atual == sorteada and TENTATIVAS == 1:
-        print(GREEN + atual + DEFAULT)
-        print("UFA!!")
-    else:
-        print(atual)
-
-
-
-def game_rules():
-    print(f"""
-JOGO DO TERMO
-Atenção às regras:
-** Descubra a palavra certa. Você tem 6 tentativas!!
-** Uma letra na cor {GREEN}Verde{DEFAULT} está na {GREEN}posição correta{DEFAULT} da palavra.
-** Uma letra na cor {YELLOW}Amarela{DEFAULT} está {YELLOW}posiçao incorreta{DEFAULT} da palavra.
-** Uma letra na cor {RED}Vermelho{DEFAULT} não faz parte da palavra.
-** Podem existir letras repetidas!!
-""")
-
-def choice_word():
-    palavras = (
+palavras = (
     "ADAGA", "ADUBO", "AMIGO", "ANEXO", "ARAME", "ARARA", "ARROZ",
     "ASILO", "ASTRO", "BAILE", "BAIXA", "BALAO", "BALSA", "BARCO",
     "BARRO", "BEIJO", "BICHO", "BORDA", "BORRA", "BRAVO", "BREJO",
@@ -109,8 +28,71 @@ def choice_word():
     "VALSA", "VENTO", "VERDE", "VISAO", "VINHO", "VIUVO", "ZEBRA"
 )
 
-    sorteada = random.choice(palavras)
-    return sorteada
+def main(tentativas=6):
+    atual = ''
+    game_rules()
+    sorteada = choice_word()
+    atual, tentativas = validate_word(tentativas, atual, sorteada)
+    compare_word(tentativas, atual, sorteada)
+
+def compare_word(tentativas, atual, sorteada):
+    if atual == sorteada:
+        print(GREEN + atual + DEFAULT)
+        print('Parabéns!! Você acertou a palavra!')
+    elif tentativas == 0:
+        print('Uma pena!!')
+        print(f'A palavra sorteada foi {sorteada}!')
+
+def get_user_input():
+    try:
+        return input('Digite uma palavra: ').upper()
+    except KeyboardInterrupt:
+        print("\nEntrada interrompida pelo usuário. Encerrando o jogo.")
+        return None
+    
+def validate_word(tentativas, atual, sorteada):
+    while (atual != sorteada) and (tentativas > 0):
+        palavra = get_user_input()
+        if palavra is None:
+            return atual, tentativas
+        if not is_valid_word(palavra):
+            print("A palavra deve ter 5 letras e conter apenas caracteres alfabéticos.")
+            continue
+        atual = atual + '\n'
+        for pos, letra in enumerate(palavra):
+            if palavra == sorteada:
+                atual = sorteada
+                break
+            elif letra == sorteada[pos]:
+                atual += GREEN + letra + DEFAULT
+            elif letra in sorteada:
+                atual += YELLOW + letra + DEFAULT
+            else:
+                atual += RED + letra + DEFAULT
+        tentativas -= 1
+        if atual != sorteada and tentativas > 0:
+            print(atual)
+            print(f"Tentativas restantes: {tentativas}")
+    return atual, tentativas
+
+
+def is_valid_word(word):
+    return len(word) == 5 and word.isalpha()
+
+def game_rules():
+    print(f"""
+JOGO DO TERMO
+Atenção às regras:
+** Descubra a palavra certa. Você tem 6 tentativas!!
+** Uma letra na cor {GREEN}Verde{DEFAULT} está na {GREEN}posição correta{DEFAULT} da palavra.
+** Uma letra na cor {YELLOW}Amarela{DEFAULT} está {YELLOW}posiçao incorreta{DEFAULT} da palavra.
+** Uma letra na cor {RED}Vermelho{DEFAULT} não faz parte da palavra.
+** Podem existir letras repetidas!!
+""")
+
+def choice_word():
+    return random.choice(palavras)
+    
 
 main()
 
