@@ -29,17 +29,17 @@ palavras = (
 )
 
 def main(tentativas=6):
-    atual = ''
     game_rules()
     sorteada = choice_word()
-    atual, tentativas = validate_word(tentativas, atual, sorteada)
-    compare_word(tentativas, atual, sorteada)
+    print(sorteada)
+    atual = validate_word(tentativas, sorteada)
+    compare_word(atual, sorteada)
 
-def compare_word(tentativas, atual, sorteada):
+def compare_word(atual, sorteada):
     if atual == sorteada:
         print(GREEN + atual + DEFAULT)
         print('Parabéns!! Você acertou a palavra!')
-    elif tentativas == 0:
+    else :
         print('Uma pena!!')
         print(f'A palavra sorteada foi {sorteada}!')
 
@@ -50,11 +50,12 @@ def get_user_input():
         print("\nEntrada interrompida pelo usuário. Encerrando o jogo.")
         return None
     
-def validate_word(tentativas, atual, sorteada):
+def validate_word(tentativas, sorteada):
+    atual = ''
     while (atual != sorteada) and (tentativas > 0):
         palavra = get_user_input()
         if palavra is None:
-            return atual, tentativas
+            return atual
         if not is_valid_word(palavra):
             print("A palavra deve ter 5 letras e conter apenas caracteres alfabéticos.")
             continue
@@ -73,7 +74,7 @@ def validate_word(tentativas, atual, sorteada):
         if atual != sorteada and tentativas > 0:
             print(atual)
             print(f"Tentativas restantes: {tentativas}")
-    return atual, tentativas
+    return atual
 
 
 def is_valid_word(word):
@@ -93,6 +94,5 @@ Atenção às regras:
 def choice_word():
     return random.choice(palavras)
     
-
 main()
 
